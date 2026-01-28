@@ -1,0 +1,60 @@
+/*Bootscreen overlay*/
+#boot-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.95) 60%);
+    color: #000000;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    padding: 2rem;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 280ms ease-in-out;
+    z-index: 10000;
+    line-height: 1.6;
+}
+
+#boot-screen.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.boot-text {
+    display: block;
+    max-width: min(800px, 88%);
+    width: 100%;
+    text-align: left;
+    white-space: pre-wrap;
+    font-family: 'Share Tech Mono', monospace;
+    color: #000000;
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.boot-text::after {
+    content: '▌';
+    display: inline-block;
+    margin-left: 6px;
+    opacity: 1;
+    animation: blink 900ms steps(1) infinite;
+    color: #000000;
+}
+
+@keyframes blink {
+    50% { opacity: 0 }
+}
+
+.fade-out {
+    animation: fadeOut 1s forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
