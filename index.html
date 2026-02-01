@@ -4,15 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student LifeOS</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
+    <!--google login things-->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+
 </head>
 <body>
     <!--bootscreen-->
-    <div id="bootscreen">
+    <div id="details">
+        <h1 style="position: absolute; top: 35%; left: 45%;">Student LifeOS</h1>
+        <h2 style="position: absolute; top: 45%; left: 45%;">All your apps in one place</h2>
+        <button id="login-button" style="position: absolute; top: 55%; left: 45%;">Log in</button>
+    </div>
+    <div id="entering" style="display: none;">
+        <pre id="entering-text" class="entering-text" aria-live="polite"></pre>
+    </div>
+    <div id="googleAuth" style="display: none;"></div>
+    <div id="boot-screen" style="display: none;">
         <pre id="boot-text" class="boot-text" aria-live="polite"></pre>
     </div>
+    
     <!--<footer>
         <p>&copy; 2026 Student LifeOS</p>
     </footer>-->
+    <script type="module" src="app.js"></script>
 </body>
 </html>

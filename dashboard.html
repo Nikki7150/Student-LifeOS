@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" style="margin: 0; padding: 0;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student LifeOS</title>
+    <link rel="stylesheet" href="d-styles.css">
+    <!--google login things-->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet" />
+</head>
+<body style="margin: 0; padding: 0;">
+   <nav>
+        <ul>
+            <li id="dashboard"><a href="dashboard.html">Dashboard</a></li>
+            <li id="settings"><img src="settings.png" style="width: 50px; cursor: pointer;"></li>
+            <li id="profile"><img id="profile-pic" style="width: 50px; cursor: pointer;"></li>
+        </ul>
+   </nav>
+    <main>
+        <button id="new-button">New</button>
+        <h1 style="margin: 20px;">Welcome, <span id="username"></span>!</h1>
+          
+        <hr style="padding: 0;"/>
+        <section id="apps-section" style="border: 2px solid rgb(153, 150, 150); margin: 20px; border-radius: 8px; position: relative;">
+            <button class="add-button" id="add">+</button>
+        </section>
+    </main>
+    <!-- Add Block Modal -->
+    <div id="add-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Add a block</h2>
+
+            <button class="block-option" data-type="todo">☑ To-Do List</button>
+            <button class="block-option" data-type="pomodoro">⏱ Pomodoro</button>
+            <button class="block-option" data-type="notes">✎ Notes</button>
+            <button class="block-option" data-type="divider">- Divider</button>
+
+            <button id="close-modal">Cancel</button>
+        </div>
+    </div>
+
+    <div id="block-popup" class="block-popup hidden">
+        <button>Add</button>
+        <button>Delete</button>
+        <button>Change color</button>
+        <button>Duplicate</button>
+    </div>
+
+
+    <footer>
+        <p>&copy; 2026 Student LifeOS</p>
+    </footer>
+    <script type="module" src="d-app.js"></script>
+</body>
+</html>
