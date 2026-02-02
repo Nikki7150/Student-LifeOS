@@ -93,14 +93,15 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstati
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBqBdzDj58yRkvpsQlseX8U8_aBHnP54FY",
-    authDomain: "student-lifeos.firebaseapp.com",
-    projectId: "student-lifeos",
-    storageBucket: "student-lifeos.firebasestorage.app",
-    messagingSenderId: "786061696395",
-    appId: "1:786061696395:web:cfdbd43476260a30eca38e",
-    measurementId: "G-6TWTLG5R0L"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
+
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
