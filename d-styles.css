@@ -63,7 +63,6 @@ nav li {
 main {
     flex: 1;
     margin: 50px;
-    margin-right: 0;
     font-size: 20px;
     font-family: 'Indie Flower', cursive;
 }
@@ -294,3 +293,27 @@ p {
     opacity: 1;
   }
 }
+
+.divider-block {
+  position: relative;
+  padding: 5px 0; /* makes hover area taller */
+  border: none;
+  background: none;
+  margin: 0;
+}
+
+.divider-block .drag-handle {
+  position: absolute;
+  left: -18px;
+  top: 10px;
+  font-size: 20px;
+  cursor: grab;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  user-select: none;
+}
+
+.divider-block:hover .drag-handle {
+  display: block;
+}
+

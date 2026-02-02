@@ -80,19 +80,19 @@ document.querySelectorAll(".block-option").forEach(btn => {
     appSection.style.border = "none";
     
     if (type === "todo") {
-      const todoBlock = createTodoBlock();
-      appSection.appendChild(todoBlock);
+        insertBlock(createTodoBlock());
     }
 
     if (type === "pomodoro") {
-      appSection.appendChild(createPomodoroBlock());
+        insertBlock(createPomodoroBlock());
     }
 
     if (type === "divider") {
-      appSection.appendChild(createDividerBlock());
+        insertBlock(createDividerBlock());
     }
 
     modal.classList.add("hidden");
+    activeBlock = null;
     addBtn.style.display = "none";
   });
 });
@@ -116,7 +116,6 @@ function createTodoBlock() {
   const itemsContainer = block.querySelector(".todo-items");
   const input = block.querySelector(".todo-input input");
   const addButton = block.querySelector(".todo-input button");
-  const deleteBlockBtn = block.querySelector(".delete-block-btn");
 
   addButton.addEventListener("click", () => {
     if (!input.value.trim()) return;
@@ -155,18 +154,6 @@ function createTodoBlock() {
     input.value = "";
   });
 
-  /*deleteBlockBtn.addEventListener("click", () => {
-    if (confirm(`Deleting ${block.querySelector(".block-title").value || "this list"} will delete its contents. Click OK to confirm.`)) {
-      const widget = block.closest(".grid-stack-item");
-        block.remove();
-      
-      const blockCount = appSection.querySelectorAll(".grid-stack-item").length;
-      if (blockCount === 0) {
-        addBtn.style.display = "block";
-      }
-    }
-  });*/
-
   return block;
 }
 
@@ -188,7 +175,6 @@ function createPomodoroBlock() {
     </div>
   `;
 
-    const deleteBlockBtn = block.querySelector(".delete-block-btn");
     const startBtn = block.querySelector(".start-btn");
     const pauseBtn = block.querySelector(".pause-btn");
     const resetBtn = block.querySelector(".reset-btn");
@@ -254,46 +240,17 @@ function createPomodoroBlock() {
         }
     });
 
-    /*deleteBlockBtn.addEventListener("click", () => {
-      if (confirm(`Deleting ${block.querySelector(".block-title").value || "this timer"} will delete the timer. Click OK to confirm.`)) {
-        const widget = block.closest(".grid-stack-item");
-        if (widget && grid) {
-          grid.removeWidget(widget);
-        } else {
-          block.remove();
-        }
-        const blockCount = appSection.querySelectorAll(".grid-stack-item").length;
-        if (blockCount === 0) {
-          addBtn.style.display = "block";
-        }
-      }
-    });*/
-
-
   return block;
 }
 
 // Divider block
 function createDividerBlock() {
   const block = document.createElement("div");
+  block.className = "block divider-block";
   block.innerHTML = `
     <div class="drag-handle">⠿</div>
     <hr class="divider-line"/>
   `;
-
-  const deleteBlockBtn = block.querySelector(".delete-block-btn");
-
-  /*deleteBlockBtn.addEventListener("click", () => {
-    if (confirm(`Deleting this divider will remove it. Click OK to confirm.`)) {
-      const widget = block.closest(".grid-stack-item");
-        block.remove();
-
-      const blockCount = appSection.querySelectorAll(".grid-stack-item").length;
-      if (blockCount === 0) {
-        addBtn.style.display = "block";
-      }
-    }
-  });*/
 
   return block;
 }
@@ -305,6 +262,10 @@ if (appSection.children.length === 0) {
 
 const popup = document.getElementById("block-popup");
 let activeBlock = null;
+
+popup.addEventListener("click", (e) => {
+  e.stopPropagation();
+});
 
 document.addEventListener("click", (e) => {
   // Clicked on drag handle?
@@ -326,6 +287,224 @@ document.addEventListener("click", (e) => {
 
   // Click outside → close popup
   popup.classList.add("hidden");
-  activeBlock = null;
 });
 
+// handle block pop up buttons
+const addBTN = document.getElementById("addBTN");
+const deleteBTN = document.getElementById("deleteBTN");
+const colorBTN = document.getElementById("colorBTN");
+const duplicateBTN = document.getElementById("duplicateBTN");
+
+addBTN.addEventListener("click", (e) => {
+    e.stopPropagation(); // don't close popup early
+    modal.classList.remove("hidden");
+});
+
+deleteBTN.addEventListener("click", (e) => {
+  e.stopPropagation();
+
+  if (!activeBlock) return;
+
+  activeBlock.remove();
+  activeBlock = null;
+
+  popup.classList.add("hidden");
+
+  // If no blocks left, restore empty state
+  const remainingBlocks = appSection.querySelectorAll(".block").length;
+
+  if (remainingBlocks === 0) {
+    addBtn.style.display = "block";
+  }
+});
+
+colorBTN.addEventListener("click", (e) => {
+  e.stopPropagation();
+  
+  if (!activeBlock) return;
+  
+  // Show the color popup with preset colors
+  const rect = colorBTN.getBoundingClientRect();
+  colorPopup.style.top = `${rect.top + window.scrollY}px`;
+  colorPopup.style.left = `${rect.right + 8 + window.scrollX}px`;
+  colorPopup.classList.remove("hidden");
+});
+
+
+/*duplicateBTN.addEventListener("click", (e) => {
+
+});*/
+
+function insertBlock(block) {
+  if (activeBlock) {
+    activeBlock.after(block);
+  } else {
+    appSection.appendChild(block);
+  }
+}
+
+
+const colorPopup = document.getElementById("color-popup");
+
+colorPopup.addEventListener("click", (e) => {
+  e.stopPropagation();  // Keep popup open when clicking inside
+});
+
+document.addEventListener("click", (e) => {
+  // Close colorPopup only if clicking outside of it
+  if (!colorPopup.contains(e.target) && e.target !== colorBTN) {
+    colorPopup.classList.add("hidden");
+  }
+});
+
+// Add text color button listeners
+document.getElementById("default-t")?.addEventListener("click", () => {
+  if (activeBlock) {
+        activeBlock.style.color = "#000000ff";
+        const buttons = activeBlock.querySelectorAll("button");
+        buttons.forEach(btn => {
+        btn.style.backgroundColor = "#000000ff";
+  });}
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("gray-t")?.addEventListener("click", () => {
+  if (activeBlock) {
+    activeBlock.style.color = "#838383ff";
+    const buttons = activeBlock.querySelectorAll("button");
+        buttons.forEach(btn => {
+        btn.style.backgroundColor = "#838383ff";
+  });}
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("brown-t")?.addEventListener("click", () => {
+  if (activeBlock) {
+    activeBlock.style.color = "#7a5a5aff";
+  const buttons = activeBlock.querySelectorAll("button");
+        buttons.forEach(btn => {
+        btn.style.backgroundColor = "#7a5a5aff";
+  });}
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("orange-t")?.addEventListener("click", () => {
+  if (activeBlock) {
+    activeBlock.style.color = "#f8a74bff";
+    const buttons = activeBlock.querySelectorAll("button");
+        buttons.forEach(btn => {
+        btn.style.backgroundColor = "#f8a74bff";
+  });}
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("yellow-t")?.addEventListener("click", () => {
+  if (activeBlock) {
+    activeBlock.style.color = "#fcd677ff";
+    const buttons = activeBlock.querySelectorAll("button");
+        buttons.forEach(btn => {
+        btn.style.backgroundColor = "#fcd677ff";
+  });}
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("green-t")?.addEventListener("click", () => {
+  if (activeBlock) {
+    activeBlock.style.color = "#6cb485ff";
+    const buttons = activeBlock.querySelectorAll("button");
+        buttons.forEach(btn => {
+        btn.style.backgroundColor = "#6cb485ff";
+  });}
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("blue-t")?.addEventListener("click", () => {
+  if (activeBlock) {
+    activeBlock.style.color = "#549dddff";
+    const buttons = activeBlock.querySelectorAll("button");
+        buttons.forEach(btn => {
+        btn.style.backgroundColor = "#549dddff";
+  });}
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("purple-t")?.addEventListener("click", () => {
+  if (activeBlock) {
+    activeBlock.style.color = "#8353c8ff";
+    const buttons = activeBlock.querySelectorAll("button");
+        buttons.forEach(btn => {
+        btn.style.backgroundColor = "#8353c8ff";
+  });}
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("pink-t")?.addEventListener("click", () => {
+  if (activeBlock) {
+    activeBlock.style.color = "#f289c6ff";
+    const buttons = activeBlock.querySelectorAll("button");
+        buttons.forEach(btn => {
+        btn.style.backgroundColor = "#f289c6ff";
+  });}
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("red-t")?.addEventListener("click", () => {
+  if (activeBlock) {
+    activeBlock.style.color = "#e73838ff";
+    const buttons = activeBlock.querySelectorAll("button");
+        buttons.forEach(btn => {
+        btn.style.backgroundColor = "#e73838ff";
+  });}
+  colorPopup.classList.add("hidden");
+});
+
+// Add background color button listeners
+document.getElementById("default-b")?.addEventListener("click", () => {
+  if (activeBlock) activeBlock.style.backgroundColor = "#a1a1a111";
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("gray-b")?.addEventListener("click", () => {
+  if (activeBlock) activeBlock.style.backgroundColor = "#8383834a";
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("brown-b")?.addEventListener("click", () => {
+  if (activeBlock) activeBlock.style.backgroundColor = "#7a5a5a4e";
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("orange-b")?.addEventListener("click", () => {
+  if (activeBlock) activeBlock.style.backgroundColor = "#f8a74b41";
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("yellow-b")?.addEventListener("click", () => {
+  if (activeBlock) activeBlock.style.backgroundColor = "#fcd6774a";
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("green-b")?.addEventListener("click", () => {
+  if (activeBlock) activeBlock.style.backgroundColor = "#6cb48546";
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("blue-b")?.addEventListener("click", () => {
+  if (activeBlock) activeBlock.style.backgroundColor = "#549ddd94";
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("purple-b")?.addEventListener("click", () => {
+  if (activeBlock) activeBlock.style.backgroundColor = "#8453c83b";
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("pink-b")?.addEventListener("click", () => {
+  if (activeBlock) activeBlock.style.backgroundColor = "#f289c646";
+  colorPopup.classList.add("hidden");
+});
+
+document.getElementById("red-b")?.addEventListener("click", () => {
+  if (activeBlock) activeBlock.style.backgroundColor = "#e738384e";
+  colorPopup.classList.add("hidden");
+});

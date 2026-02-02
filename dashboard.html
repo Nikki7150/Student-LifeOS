@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student LifeOS</title>
+    <!-- Add BEFORE your d-styles.css 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack-extra.min.css">-->
     <link rel="stylesheet" href="d-styles.css">
     <!--google login things-->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
@@ -26,8 +29,8 @@
         <h1 style="margin: 20px;">Welcome, <span id="username"></span>!</h1>
           
         <hr style="padding: 0;"/>
-        <section id="apps-section" style="border: 2px solid rgb(153, 150, 150); margin: 20px; border-radius: 8px; position: relative;">
-            <button class="add-button" id="add">+</button>
+        <section id="apps-section" class="grid-stack">
+            <button class="add-button" id="add" style="width: 100%; border: 2px solid #858585ff; border-radius: 10px;">+</button>
         </section>
     </main>
     <!-- Add Block Modal -->
@@ -45,16 +48,43 @@
     </div>
 
     <div id="block-popup" class="block-popup hidden">
-        <button>Add</button>
-        <button>Delete</button>
-        <button>Change color</button>
-        <button>Duplicate</button>
+        <button id="addBTN">Add</button>
+        <button id="deleteBTN">Delete</button>
+        <button id="colorBTN">Color</button>
+        <button id="duplicateBTN">Duplicate</button>
     </div>
 
+    <div id="color-popup" class="block-popup hidden">
+        <p>Text color</p>
+        <button id="default-t">Default color</button>
+        <button id="gray-t">Gray color</button>
+        <button id="brown-t">Brown color</button>
+        <button id="orange-t">Orange color</button>
+        <button id="yellow-t">Yellow color</button>
+        <button id="green-t">Green color</button>
+        <button id="blue-t">Blue color</button>
+        <button id="purple-t">Purple color</button>
+        <button id="pink-t">Pink color</button>
+        <button id="red-t">Red color</button>
+        <hr />
+        <p>Background color</p>
+        <button id="default-b">Default color</button>
+        <button id="gray-b">Gray color</button>
+        <button id="brown-b">Brown color</button>
+        <button id="orange-b">Orange color</button>
+        <button id="yellow-b">Yellow color</button>
+        <button id="green-b">Green color</button>
+        <button id="blue-b">Blue color</button>
+        <button id="purple-b">Purple color</button>
+        <button id="pink-b">Pink color</button>
+        <button id="red-b">Red color</button>
+    </div>
 
     <footer>
         <p>&copy; 2026 Student LifeOS</p>
     </footer>
+    <!-- Add BEFORE d-app.js -->
+    <script src="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack-all.js"></script>
     <script type="module" src="d-app.js"></script>
 </body>
 </html>
