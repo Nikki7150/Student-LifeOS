@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student LifeOS</title>
-    <!-- Add BEFORE your d-styles.css 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@10.3.1/dist/gridstack-extra.min.css">-->
     <link rel="stylesheet" href="d-styles.css">
     <!--google login things-->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
@@ -15,8 +12,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playpen+Sans&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
 </head>
 <body style="margin: 0; padding: 0;">
+
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--Nav Bar-->
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
    <nav>
         <ul>
             <li id="dashboard"><a href="dashboard.html">Dashboard</a></li>
@@ -24,6 +27,10 @@
             <li id="profile"><img id="profile-pic" style="width: 50px; cursor: pointer;"></li>
         </ul>
    </nav>
+
+   <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--Our main DASHBOARD-->
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
     <main>
         <button id="new-button">New</button>
         <h1 style="margin: 20px;">Welcome, <span id="username"></span>!</h1>
@@ -33,7 +40,10 @@
             <button class="add-button" id="add" style="width: 100%; border: 2px solid #858585ff; border-radius: 10px;">+</button>
         </section>
     </main>
-    <!-- Block Modal -->
+
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--Modal to add Blocks-->
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
     <div id="add-modal" class="modal hidden">
         <div class="modal-content">
             <h2>Add a block</h2>
@@ -47,6 +57,9 @@
         </div>
     </div>
 
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--Drag Handle Popup-->
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
     <div id="block-popup" class="block-popup hidden">
         <button id="addBTN">Add</button>
         <button id="deleteBTN">Delete</button>
@@ -54,6 +67,9 @@
         <button id="duplicateBTN">Duplicate</button>
     </div>
 
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--Color Popup-->
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
     <div id="color-popup" class="block-popup hidden">
         <p>Text color</p>
         <button id="default-t">Default color</button>
@@ -80,16 +96,27 @@
         <button id="red-b">Red color</button>
     </div>
 
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--Modal for the Settings-->
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
     <div id="settings-modal" class="modal hidden"> 
         <div class="modal-content">
+            <button id="close-s-modal">X</button>
             <h2>Settings</h2>
+            <hr />
+            <hr />
+            <br />
             <label for="font-select" class="heading">Choose Font:</label>
+            <div class="font-option-container">
                 <button id="default-f" class="font-option">Default</button>
-                <button id="indie-flower-f" class="font-option">Indie Flower</button>
+                <button id="share-tech-mono-f" class="font-option">Share Tech Mono</button>
                 <button id="arial-f" class="font-option">Arial</button>
                 <button id="verdana-f" class="font-option">Verdana</button>
                 <button id="times-new-roman-f" class="font-option">Times New Roman</button>
+                <button id="playpen-sans-f" class="font-option">Playpen Sans</button>
+            </div>
             <hr />
+            <br />
             <label for="color-theme" class="heading">Choose Color Theme:</label>
             <div class="color-theme-container">
                 <button id="default" class="color-theme">Default</button>
@@ -108,6 +135,32 @@
         </div>
     </div>
 
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--Modal for the Profile-->
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <div id="profile-modal" class="modal hidden"> 
+        <div class="modal-content">
+            <button id="close-p-modal">X</button>
+            <h2>Your Profile</h2>
+            <hr />
+            <hr />
+            <br />
+            <div style="text-align: center;">
+                <img id="profile-pic-large" style="width: 100px; border-radius: 50%;"/>
+                <h3 id="profile-username"></h3>
+                <p id="profile-email"></p>
+                <br />
+                <hr />
+                <button id="logout-button">Log Out ➜]</button>
+            </div>
+            <hr />
+            <button id="close-profile-modal">Close &times;</button>
+        </div>
+    </div>
+
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--Footer-->
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
     <footer>
         <p>&copy; 2026 Student LifeOS</p>
     </footer>

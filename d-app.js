@@ -1,10 +1,14 @@
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // Import the functions you need from the SDKs you need
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
 const blocks = [];
 
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // to save into blocks array
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 function registerBlock(blockEl, type) {
   const blockData = {
     id: crypto.randomUUID(),
@@ -13,7 +17,8 @@ function registerBlock(blockEl, type) {
     styles: {
       textColor: "",
       bgColor: ""
-    }
+    }, 
+    buttons: {}
   };
 
   blockEl.dataset.blockId = blockData.id;
@@ -22,8 +27,9 @@ function registerBlock(blockEl, type) {
   return blockData;
 }
 
-
-// Your web app's Firebase configuration
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+//  web app's Firebase configuration
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 const firebaseConfig = {
     apiKey: "AIzaSyBqBdzDj58yRkvpsQlseX8U8_aBHnP54FY",
     authDomain: "student-lifeos.firebaseapp.com",
@@ -65,17 +71,9 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// user log out logic
-/*const settingsBtn = document.getElementById("settings");
-if (settingsBtn) {
-  settingsBtn.addEventListener("click", () => {
-    signOut(auth).then(() => {
-      window.location.href = "index.html";
-    });
-  });
-}*/
-
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /*the adding apps part*/
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 const addBtn = document.getElementById("add");
 const modal = document.getElementById("add-modal");
 const closeModal = document.getElementById("close-modal");
@@ -118,7 +116,9 @@ document.querySelectorAll(".block-option").forEach(btn => {
   });
 });
 
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // Todo list block
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 function createTodoBlock() {
   const block = document.createElement("div");
   block.className = "block todo-block";
@@ -135,9 +135,13 @@ function createTodoBlock() {
     </div>
   `;
 
+  const blockData = registerBlock(block, "todo");
+
   const itemsContainer = block.querySelector(".todo-items");
   const input = block.querySelector(".todo-input input");
   const addButton = block.querySelector(".todo-input button");
+
+  blockData.buttons.add = addButton;
 
   addButton.addEventListener("click", () => {
     if (!input.value.trim()) return;
@@ -175,11 +179,13 @@ function createTodoBlock() {
     itemsContainer.appendChild(item);
     input.value = "";
   });
-registerBlock(block, "todo");
+
   return block;
 }
 
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // Pomodoro timer block
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 function createPomodoroBlock() {
   // Implementation for Pomodoro block can go here
   const block = document.createElement("div");
@@ -198,11 +204,19 @@ function createPomodoroBlock() {
     </div>
   `;
 
+  const blockData = registerBlock(block, "pomodoro");
+
     const startBtn = block.querySelector(".start-btn");
     const pauseBtn = block.querySelector(".pause-btn");
     const resetBtn = block.querySelector(".reset-btn");
     const minutesEl = block.querySelector(".minutes");
     const secondsEl = block.querySelector(".seconds");
+
+    blockData.buttons = {
+    start: startBtn,
+    pause: pauseBtn,
+    reset: resetBtn
+  };
 
     let myInterval;
     let totalSeconds;
@@ -267,7 +281,9 @@ function createPomodoroBlock() {
   return block;
 }
 
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // Divider block
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 function createDividerBlock() {
   const block = document.createElement("div");
   block.className = "block divider-block";
@@ -281,11 +297,16 @@ function createDividerBlock() {
   return block;
 }
 
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /*show add button if no apps*/
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 if (appSection.children.length === 0) {
   addBtn.style.display = "block";
 }
 
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// handle block pop up
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 const popup = document.getElementById("block-popup");
 let activeBlock = null;
 
@@ -321,7 +342,9 @@ document.addEventListener("click", (e) => {
   popup.classList.add("hidden");
 });
 
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // handle block pop up buttons
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 const addBTN = document.getElementById("addBTN");
 const deleteBTN = document.getElementById("deleteBTN");
 const colorBTN = document.getElementById("colorBTN");
@@ -437,7 +460,9 @@ duplicateBTN.addEventListener("click", (e) => {
   popup.classList.add("hidden");
 });
 
-
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// insert block at active position
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 function insertBlock(block) {
   if (activeBlock) {
     activeBlock.after(block);
@@ -446,7 +471,9 @@ function insertBlock(block) {
   }
 }
 
-
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// handle color popup
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 const colorPopup = document.getElementById("color-popup");
 
 colorPopup.addEventListener("click", (e) => {
@@ -460,7 +487,9 @@ document.addEventListener("click", (e) => {
   }
 });
 
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // Add text color button listeners
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 document.getElementById("default-t")?.addEventListener("click", () => {
   if (activeBlock) {
         activeBlock.style.color = "#000000ff";
@@ -561,7 +590,9 @@ document.getElementById("red-t")?.addEventListener("click", () => {
   colorPopup.classList.add("hidden");
 });
 
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // Add background color button listeners
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 document.getElementById("default-b")?.addEventListener("click", () => {
   if (activeBlock) activeBlock.style.backgroundColor = "#a1a1a111";
   colorPopup.classList.add("hidden");
@@ -612,9 +643,13 @@ document.getElementById("red-b")?.addEventListener("click", () => {
   colorPopup.classList.add("hidden");
 });
 
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// Settings modal logic
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 const settingsBtn = document.getElementById("settings");
 const settingsModal = document.getElementById("settings-modal");
 const closeSettingsModal = document.getElementById("close-settings-modal");
+const closeSettingsModalAlt = document.getElementById("close-s-modal");
 
 settingsBtn.addEventListener("click", () => {
   settingsModal.classList.remove("hidden");
@@ -622,6 +657,73 @@ settingsBtn.addEventListener("click", () => {
 
 closeSettingsModal.addEventListener("click", () => {
   settingsModal.classList.add("hidden");
+});
+
+closeSettingsModalAlt.addEventListener("click", () => {
+  settingsModal.classList.add("hidden");
+});
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// Color theme button listeners
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+document.getElementById("default").addEventListener("click", () => {
+  document.documentElement.style.setProperty(
+    "--panel-bg",
+    "#f0f0f0" // pick any color
+  );
+  blocks.forEach(block => {
+    if( block.type != "divider") {
+      block.el.style.backgroundColor = "#f0f0f0";
+      block.styles.bgColor = "#f0f0f0";
+      if (block.buttons) {
+        Object.values(block.buttons).forEach(btn => {
+          if (btn) btn.style.backgroundColor = "#f0f0f0";
+        });
+      }
+    }
+  });
+  if (newBtn) newBtn.style.backgroundColor = "#f0f0f0";
+  
+});
+
+document.getElementById("blue").addEventListener("click", () => {
+  document.documentElement.style.setProperty(
+    "--panel-bg",
+    "#3f75bca9" // pick any color
+  );
+  blocks.forEach(block => {
+    if( block.type != "divider") {
+      block.el.style.backgroundColor = "#3f75bca9";
+      block.styles.bgColor = "#3f75bca9";
+      if (block.buttons) {
+        Object.values(block.buttons).forEach(btn => {
+          if (btn) btn.style.backgroundColor = "#3f75bca9";
+        });
+      }
+    }
+  });
+  if (newBtn) newBtn.style.backgroundColor = "#3f75bca9";
+  
+});
+
+document.getElementById("green").addEventListener("click", () => {
+  document.documentElement.style.setProperty(
+    "--panel-bg",
+    "#39674fa9" // pick any color
+  );
+  blocks.forEach(block => {
+    if( block.type != "divider") {
+      block.el.style.backgroundColor = "#39674fa9";
+      block.styles.bgColor = "#39674fa9";
+      if (block.buttons) {
+        Object.values(block.buttons).forEach(btn => {
+          if (btn) btn.style.backgroundColor = "#39674fa9";
+        });
+      }
+    }
+  });
+  if (newBtn) newBtn.style.backgroundColor = "#39674fa9";
+  
 });
 
 document.getElementById("red").addEventListener("click", () => {
@@ -633,10 +735,225 @@ document.getElementById("red").addEventListener("click", () => {
     if( block.type != "divider") {
       block.el.style.backgroundColor = "#bc3f3fa9";
       block.styles.bgColor = "#bc3f3fa9";
+      if (block.buttons) {
+        Object.values(block.buttons).forEach(btn => {
+          if (btn) btn.style.backgroundColor = "#bc3f3fa9";
+        });
+      }
     }
   });
-  buttons.forEach(btn => {
-    btn.style.backgroundColor = "#682020d8";
-  });
+  if (newBtn) newBtn.style.backgroundColor = "#bc3f3fa9";
+  
 });
 
+document.getElementById("purple").addEventListener("click", () => {
+  document.documentElement.style.setProperty(
+    "--panel-bg",
+    "#9564c29c" // pick any color
+  );
+  blocks.forEach(block => {
+    if( block.type != "divider") {
+      block.el.style.backgroundColor = "#9564c29c";
+      block.styles.bgColor = "#9564c29c";
+      if (block.buttons) {
+        Object.values(block.buttons).forEach(btn => {
+          if (btn) btn.style.backgroundColor = "#9564c29c";
+        });
+      }
+    }
+  });
+  if (newBtn) newBtn.style.backgroundColor = "#9564c29c";
+  
+});
+
+document.getElementById("orange").addEventListener("click", () => {
+  document.documentElement.style.setProperty(
+    "--panel-bg",
+    "#bc793fa9" // pick any color
+  );
+  blocks.forEach(block => {
+    if( block.type != "divider") {
+      block.el.style.backgroundColor = "#bc793fa9";
+      block.styles.bgColor = "#bc793fa9";
+      if (block.buttons) {
+        Object.values(block.buttons).forEach(btn => {
+          if (btn) btn.style.backgroundColor = "#bc793fa9";
+        });
+      }
+    }
+  });
+  if (newBtn) newBtn.style.backgroundColor = "#bc793fa9";
+  
+});
+
+document.getElementById("pink").addEventListener("click", () => {
+  document.documentElement.style.setProperty(
+    "--panel-bg",
+    "#b7649cbc" // pick any color
+  );
+  blocks.forEach(block => {
+    if( block.type != "divider") {
+      block.el.style.backgroundColor = "#b7649cbc";
+      block.styles.bgColor = "#b7649cbc";
+      if (block.buttons) {
+        Object.values(block.buttons).forEach(btn => {
+          if (btn) btn.style.backgroundColor = "#b7649cbc";
+        });
+      }
+    }
+  });
+  if (newBtn) newBtn.style.backgroundColor = "#b7649cbc";
+  
+});
+
+document.getElementById("gray").addEventListener("click", () => {
+  document.documentElement.style.setProperty(
+    "--panel-bg",
+    "#626161a9" // pick any color
+  );
+  blocks.forEach(block => {
+    if( block.type != "divider") {
+      block.el.style.backgroundColor = "#626161a9";
+      block.styles.bgColor = "#626161a9";
+      if (block.buttons) {
+        Object.values(block.buttons).forEach(btn => {
+          if (btn) btn.style.backgroundColor = "#626161a9";
+        });
+      }
+    }
+  });
+  if (newBtn) newBtn.style.backgroundColor = "#626161a9";
+  
+});
+
+document.getElementById("brown").addEventListener("click", () => {
+  document.documentElement.style.setProperty(
+    "--panel-bg",
+    "#935c5091" // pick any color
+  );
+  blocks.forEach(block => {
+    if( block.type != "divider") {
+      block.el.style.backgroundColor = "#935c5091";
+      block.styles.bgColor = "#935c5091";
+      if (block.buttons) {
+        Object.values(block.buttons).forEach(btn => {
+          if (btn) btn.style.backgroundColor = "#935c5091";
+        });
+      }
+    }
+  });
+  if (newBtn) newBtn.style.backgroundColor = "#935c5091";
+  
+});
+
+
+document.getElementById("yellow").addEventListener("click", () => {
+  document.documentElement.style.setProperty(
+    "--panel-bg",
+    "#ebcf61c2" // pick any color
+  );
+  blocks.forEach(block => {
+    if( block.type != "divider") {
+      block.el.style.backgroundColor = "#ebcf61c2";
+      block.styles.bgColor = "#ebcf61c2";
+      if (block.buttons) {
+        Object.values(block.buttons).forEach(btn => {
+          if (btn) btn.style.backgroundColor = "#ebcf61c2";
+        });
+      }
+    }
+  });
+  if (newBtn) newBtn.style.backgroundColor = "#ebcf61c2";
+  
+});
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// font style button listeners
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+document.getElementById("default-f").addEventListener("click", () => {
+  document.documentElement.style.setProperty("--global-font", "'Indie Flower', cursive");
+});
+
+document.getElementById("share-tech-mono-f").addEventListener("click", () => {
+  document.documentElement.style.setProperty("--global-font", "'Share Tech Mono', monospace");
+});
+
+document.getElementById("arial-f").addEventListener("click", () => {
+  document.documentElement.style.setProperty("--global-font", "Arial, sans-serif");
+});
+
+document.getElementById("verdana-f").addEventListener("click", () => {
+  document.documentElement.style.setProperty("--global-font", "Verdana, sans-serif");
+});
+
+document.getElementById("times-new-roman-f").addEventListener("click", () => {
+  document.documentElement.style.setProperty("--global-font", "'Times New Roman', serif");
+});
+
+document.getElementById("playpen-sans-f").addEventListener("click", () => {
+  document.documentElement.style.setProperty("--global-font", "'Playpen Sans', sans-serif");
+});
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// Profile modal logic
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+const profileBtn = document.getElementById("profile");
+const profileModal = document.getElementById("profile-modal");
+const closeProfileModal = document.getElementById("close-profile-modal");
+const closeProfileModalAlt = document.getElementById("close-p-modal");
+
+profileBtn.addEventListener("click", () => {
+  profileModal.classList.remove("hidden");
+});
+
+closeProfileModal.addEventListener("click", () => {
+  profileModal.classList.add("hidden");
+});
+
+closeProfileModalAlt.addEventListener("click", () => {
+  profileModal.classList.add("hidden");
+});
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is logged in
+    console.log(user);
+
+    const name = user.displayName;
+    const photo = user.photoURL;
+    const email = user.email;
+
+    const usernameEl = document.getElementById("profile-username");
+    const profilePicEl = document.getElementById("profile-pic-large");
+    const emailEl = document.getElementById("profile-email");
+
+    if (emailEl) {
+      emailEl.textContent = email || "No email provided";
+    }
+
+    if (usernameEl) {
+      usernameEl.textContent = name || email || "User";
+    }
+
+    if (profilePicEl && photo) {
+      profilePicEl.src = photo;
+      profilePicEl.alt = name || "Profile";
+    }
+
+  } else {
+    // User is NOT logged in
+    window.location.href = "index.html";
+  }
+
+  // user log out logic
+  const logoutBtn = document.getElementById("logout-button");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      if(confirm('Are you sure you want to log out?')) {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    }
+    });
+  }
+});
