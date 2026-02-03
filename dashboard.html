@@ -33,7 +33,7 @@
             <button class="add-button" id="add" style="width: 100%; border: 2px solid #858585ff; border-radius: 10px;">+</button>
         </section>
     </main>
-    <!-- Add Block Modal -->
+    <!-- Block Modal -->
     <div id="add-modal" class="modal hidden">
         <div class="modal-content">
             <h2>Add a block</h2>
@@ -78,6 +78,34 @@
         <button id="purple-b">Purple color</button>
         <button id="pink-b">Pink color</button>
         <button id="red-b">Red color</button>
+    </div>
+
+    <div id="settings-modal" class="modal hidden"> 
+        <div class="modal-content">
+            <h2>Settings</h2>
+            <label for="font-select" class="heading">Choose Font:</label>
+                <button id="default-f" class="font-option">Default</button>
+                <button id="indie-flower-f" class="font-option">Indie Flower</button>
+                <button id="arial-f" class="font-option">Arial</button>
+                <button id="verdana-f" class="font-option">Verdana</button>
+                <button id="times-new-roman-f" class="font-option">Times New Roman</button>
+            <hr />
+            <label for="color-theme" class="heading">Choose Color Theme:</label>
+            <div class="color-theme-container">
+                <button id="default" class="color-theme">Default</button>
+                <button id="blue" class="color-theme">Blue</button>
+                <button id="green" class="color-theme">Green</button>
+                <button id="red" class="color-theme">Red</button>
+                <button id="purple" class="color-theme">Purple</button>
+                <button id="orange" class="color-theme">Orange</button>
+                <button id="pink" class="color-theme">Pink</button>
+                <button id="gray" class="color-theme">Gray</button>
+                <button id="brown" class="color-theme">Brown</button>
+                <button id="yellow" class="color-theme">Yellow</button>
+            </div>
+            <hr />
+            <button id="close-settings-modal">Close &times;</button>
+        </div>
     </div>
 
     <footer>

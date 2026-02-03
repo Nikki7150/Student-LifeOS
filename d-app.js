@@ -2,15 +2,36 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
+const blocks = [];
+
+// to save into blocks array
+function registerBlock(blockEl, type) {
+  const blockData = {
+    id: crypto.randomUUID(),
+    type,
+    el: blockEl,
+    styles: {
+      textColor: "",
+      bgColor: ""
+    }
+  };
+
+  blockEl.dataset.blockId = blockData.id;
+  blocks.push(blockData);
+
+  return blockData;
+}
+
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+    apiKey: "AIzaSyBqBdzDj58yRkvpsQlseX8U8_aBHnP54FY",
+    authDomain: "student-lifeos.firebaseapp.com",
+    projectId: "student-lifeos",
+    storageBucket: "student-lifeos.firebasestorage.app",
+    messagingSenderId: "786061696395",
+    appId: "1:786061696395:web:cfdbd43476260a30eca38e",
+    measurementId: "G-6TWTLG5R0L"
 };
 
 // Initialize Firebase again
@@ -45,14 +66,14 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // user log out logic
-const settingsBtn = document.getElementById("settings");
+/*const settingsBtn = document.getElementById("settings");
 if (settingsBtn) {
   settingsBtn.addEventListener("click", () => {
     signOut(auth).then(() => {
       window.location.href = "index.html";
     });
   });
-}
+}*/
 
 /*the adding apps part*/
 const addBtn = document.getElementById("add");
@@ -101,6 +122,7 @@ document.querySelectorAll(".block-option").forEach(btn => {
 function createTodoBlock() {
   const block = document.createElement("div");
   block.className = "block todo-block";
+  block.dataset.type = "todo";
   block.innerHTML = `
     <div class="drag-handle">⠿</div>
     <input class="block-title" placeholder="Todo List Title" style="font-size: 30px;"/>
@@ -153,7 +175,7 @@ function createTodoBlock() {
     itemsContainer.appendChild(item);
     input.value = "";
   });
-
+registerBlock(block, "todo");
   return block;
 }
 
@@ -162,6 +184,7 @@ function createPomodoroBlock() {
   // Implementation for Pomodoro block can go here
   const block = document.createElement("div");
   block.className = "block pomodoro-block";
+  block.dataset.type = "pomodoro";
   block.innerHTML = `
     <div class="drag-handle">⠿</div>
     <input class="block-title" placeholder="Pomodoro Timer" style="font-size: 30px;"/>
@@ -240,6 +263,7 @@ function createPomodoroBlock() {
         }
     });
 
+  registerBlock(block, "pomodoro");
   return block;
 }
 
@@ -247,11 +271,13 @@ function createPomodoroBlock() {
 function createDividerBlock() {
   const block = document.createElement("div");
   block.className = "block divider-block";
+  block.dataset.type = "divider";
   block.innerHTML = `
     <div class="drag-handle">⠿</div>
     <hr class="divider-line"/>
   `;
 
+  registerBlock(block, "divider");
   return block;
 }
 
@@ -280,6 +306,12 @@ document.addEventListener("click", (e) => {
 
     popup.style.top = `${rect.top + window.scrollY}px`;
     popup.style.left = `${rect.right + 8 + window.scrollX}px`;
+
+    if (activeBlock.classList.contains("divider-block")) {
+      colorBTN.style.display = "none";
+    } else {
+      colorBTN.style.display = "block";
+    }
 
     popup.classList.remove("hidden");
     return;
@@ -331,9 +363,80 @@ colorBTN.addEventListener("click", (e) => {
 });
 
 
-/*duplicateBTN.addEventListener("click", (e) => {
+duplicateBTN.addEventListener("click", (e) => {
+  e.stopPropagation();
 
-});*/
+  if (!activeBlock) return;
+
+  let newBlock;
+
+  if (activeBlock.classList.contains("todo-block")) {
+    // Create a new Todo block
+    newBlock = createTodoBlock();
+
+    // Copy the title
+    const oldTitle = activeBlock.querySelector(".block-title").value;
+    newBlock.querySelector(".block-title").value = oldTitle;
+
+    // Copy all existing tasks
+    const oldTasks = activeBlock.querySelectorAll(".todo-item");
+    const newItemsContainer = newBlock.querySelector(".todo-items");
+    oldTasks.forEach(task => {
+      const text = task.querySelector("span").textContent;
+      const completed = task.querySelector("input").checked;
+      const item = document.createElement("div");
+      item.className = "todo-item";
+      item.innerHTML = `
+        <input type="checkbox" ${completed ? "checked" : ""}/>
+        <span>${text}</span>
+        <button class="edit-btn">✎</button>
+        <button class="delete-btn">🗑️</button>
+      `;
+      // Reattach event listeners
+      const checkbox = item.querySelector("input");
+      const editBtn = item.querySelector(".edit-btn");
+      const deleteBtn = item.querySelector(".delete-btn");
+      checkbox.addEventListener("click", () => item.classList.toggle("completed", checkbox.checked));
+      editBtn.addEventListener("click", () => {
+        const update = prompt("Edit task:", item.querySelector("span").textContent);
+        if (update !== null) item.querySelector("span").textContent = update;
+      });
+      deleteBtn.addEventListener("click", () => newItemsContainer.removeChild(item));
+      newItemsContainer.appendChild(item);
+    });
+
+  } else if (activeBlock.classList.contains("pomodoro-block")) {
+    // Create a new Pomodoro block
+    newBlock = createPomodoroBlock();
+
+    // Copy the title only
+    const oldTitle = activeBlock.querySelector(".block-title").value;
+    newBlock.querySelector(".block-title").value = oldTitle;
+  } else if (activeBlock.classList.contains("divider-block")) {
+    newBlock = createDividerBlock();
+  }
+
+  // Copy color styles (text & background) from the active block
+  newBlock.style.color = activeBlock.style.color;
+  newBlock.style.backgroundColor = activeBlock.style.backgroundColor;
+
+  // Also copy button colors for todo and pomodoro buttons
+  const oldButtons = activeBlock.querySelectorAll("button");
+  const newButtons = newBlock.querySelectorAll("button");
+  oldButtons.forEach((btn, i) => {
+    if (newButtons[i]) {
+      newButtons[i].style.backgroundColor = btn.style.backgroundColor;
+      newButtons[i].style.color = btn.style.color;
+    }
+  });
+
+  // Insert the new block right after the active one
+  insertBlock(newBlock);
+
+  activeBlock = null;
+  popup.classList.add("hidden");
+});
+
 
 function insertBlock(block) {
   if (activeBlock) {
@@ -508,3 +611,32 @@ document.getElementById("red-b")?.addEventListener("click", () => {
   if (activeBlock) activeBlock.style.backgroundColor = "#e738384e";
   colorPopup.classList.add("hidden");
 });
+
+const settingsBtn = document.getElementById("settings");
+const settingsModal = document.getElementById("settings-modal");
+const closeSettingsModal = document.getElementById("close-settings-modal");
+
+settingsBtn.addEventListener("click", () => {
+  settingsModal.classList.remove("hidden");
+});
+
+closeSettingsModal.addEventListener("click", () => {
+  settingsModal.classList.add("hidden");
+});
+
+document.getElementById("red").addEventListener("click", () => {
+  document.documentElement.style.setProperty(
+    "--panel-bg",
+    "#bc3f3fa9" // pick any color
+  );
+  blocks.forEach(block => {
+    if( block.type != "divider") {
+      block.el.style.backgroundColor = "#bc3f3fa9";
+      block.styles.bgColor = "#bc3f3fa9";
+    }
+  });
+  buttons.forEach(btn => {
+    btn.style.backgroundColor = "#682020d8";
+  });
+});
+

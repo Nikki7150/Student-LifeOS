@@ -8,6 +8,10 @@ html {
     font-family: 'Indie Flower', cursive;
 }
 
+:root {
+  --panel-bg: #f0f0f0;
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -16,7 +20,7 @@ body {
 /* dashboard nav */
 nav {
     width: 100%;
-    background-color: #f0f0f0;
+    background-color: var(--panel-bg);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
@@ -72,7 +76,7 @@ footer {
     padding: 20px;
     padding-right: 0;
     padding-left: 0;
-    background-color: #f0f0f0;
+    background-color: var(--panel-bg);
     width: 100%;
     font-family: 'Indie Flower', cursive;
     margin-top: auto;
@@ -150,7 +154,7 @@ footer {
   border-radius: 10px;
   padding: 15px;
   margin: 15px 0;
-  background: #fafafa;
+  background: var(--panel-bg);
 }
 
 /* Title input */
@@ -203,7 +207,7 @@ footer {
 .completed {
   text-decoration: line-through;
   color: #888;
-  border: 1px solid gray;
+  border: 1px solid var(--panel-bg);
 }
 
 .todo-text {
@@ -317,3 +321,81 @@ p {
   display: block;
 }
 
+/* Hide modal */
+.hidden {
+  display: none;
+}
+
+/* Modal box */
+#settings-modal .modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+}
+
+#close-settings-modal {
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 19px;
+  font-family: 'Indie Flower', cursive;
+  bottom: 70px;
+  position: absolute;
+}
+
+.font-option {
+    font-family: 'Indie Flower', cursive;
+    font-size: 18px;
+    padding: 4px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: var(--panel-bg);
+    color: rgb(0, 0, 0);
+    margin: 10px 0;
+}
+
+.theme-option {
+    font-family: 'Indie Flower', cursive;
+    font-size: 18px;
+    padding: 4px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: var(--panel-bg);
+    color: rgb(0, 0, 0);
+    margin: 10px 0;
+}
+
+.color-theme {
+    font-family: 'Indie Flower', cursive;
+    font-size: 18px;
+    padding: 4px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: var(--panel-bg);
+    color: rgb(0, 0, 0);
+    margin: 10px 0;
+    }
+
+/*make color-theme buttons in 2 columns*/
+.color-theme-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.heading {
+    font-family: 'Indie Flower', cursive;
+    font-size: 20px;
+    text-decoration: underline;
+}
