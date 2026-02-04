@@ -47,6 +47,13 @@ nav li {
     margin: 0;
 }
 
+
+a {
+  text-decoration: none;
+  color: #000000;
+  font-size: 30px;
+}
+
 #settings {
     margin-left: auto;
 }
@@ -68,6 +75,7 @@ nav li {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
+    grid-column: 1 / -1;
 }
 
 main {
@@ -310,6 +318,7 @@ p {
   border: none;
   background: none;
   margin: 0;
+  grid-column: 1 / -1;
 }
 
 .divider-block .drag-handle {
@@ -470,4 +479,13 @@ p {
     background: transparent;
     cursor: pointer;
     color: rgb(104, 61, 61);
+}
+
+#apps-section {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }

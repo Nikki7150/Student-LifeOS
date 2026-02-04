@@ -3,6 +3,13 @@
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
 
 const blocks = [];
 
@@ -43,11 +50,13 @@ const firebaseConfig = {
 // Initialize Firebase again
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
     // User is logged in
     console.log(user);
+    loadDashboard(user.uid);
 
     const name = user.displayName;
     const photo = user.photoURL;
@@ -93,21 +102,24 @@ closeModal.addEventListener("click", () => {
 });
 
 document.querySelectorAll(".block-option").forEach(btn => {
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click", async () => {
     const type = btn.dataset.type;
 
     appSection.style.border = "none";
     
     if (type === "todo") {
         insertBlock(createTodoBlock());
+        await saveDashboard(auth.currentUser.uid);
     }
 
     if (type === "pomodoro") {
         insertBlock(createPomodoroBlock());
+        await saveDashboard(auth.currentUser.uid);
     }
 
     if (type === "divider") {
         insertBlock(createDividerBlock());
+        await saveDashboard(auth.currentUser.uid);
     }
 
     modal.classList.add("hidden");
@@ -386,7 +398,7 @@ colorBTN.addEventListener("click", (e) => {
 });
 
 
-duplicateBTN.addEventListener("click", (e) => {
+duplicateBTN.addEventListener("click", async (e) => {
   e.stopPropagation();
 
   if (!activeBlock) return;
@@ -458,6 +470,7 @@ duplicateBTN.addEventListener("click", (e) => {
 
   activeBlock = null;
   popup.classList.add("hidden");
+  await saveDashboard(auth.currentUser.uid);
 });
 
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -957,3 +970,76 @@ onAuthStateChanged(auth, (user) => {
     });
   }
 });
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// save to dashboard function
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+async function saveDashboard(userId) {
+  const dashboardRef = doc(db, "users", userId, "dashboard", "main");
+
+  const data = {
+    blocks: blocks.map(block => ({
+      id: block.id,
+      type: block.type,
+      title: block.el.querySelector(".block-title")?.value || "",
+      styles: block.styles,
+      todos: block.type === "todo"
+        ? [...block.el.querySelectorAll(".todo-item")].map(item => ({
+            text: item.querySelector("span").textContent,
+            completed: item.querySelector("input").checked
+          }))
+        : []
+    }))
+  };
+
+  await setDoc(dashboardRef, data);
+}
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// loading dashboard
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+async function loadDashboard(userId) {
+  const dashboardRef = doc(db, "users", userId, "dashboard", "main");
+  const snap = await getDoc(dashboardRef);
+
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  data.blocks.forEach(block => {
+    let el;
+
+    if (block.type === "todo") {
+      el = createTodoBlock();
+      el.querySelector(".block-title").value = block.title;
+
+      const container = el.querySelector(".todo-items");
+      block.todos.forEach(todo => {
+        const item = document.createElement("div");
+        item.className = "todo-item";
+        item.innerHTML = `
+          <input type="checkbox" ${todo.completed ? "checked" : ""} />
+          <span>${todo.text}</span>
+          <button class="edit-btn">✎</button>
+          <button class="delete-btn">🗑️</button>
+        `;
+        if (todo.completed) item.classList.add("completed");
+        container.appendChild(item);
+      });
+    }
+
+    if (block.type === "pomodoro") {
+      el = createPomodoroBlock();
+      el.querySelector(".block-title").value = block.title;
+    }
+
+    if (block.type === "divider") {
+      el = createDividerBlock();
+    }
+
+    el.style.color = block.styles.textColor;
+    el.style.backgroundColor = block.styles.bgColor;
+
+    appSection.appendChild(el);
+  });
+}
