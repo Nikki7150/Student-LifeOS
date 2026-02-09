@@ -16,9 +16,9 @@ const blocks = [];
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // to save into blocks array
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-function registerBlock(blockEl, type) {
+function registerBlock(blockEl, type, id) {
   const blockData = {
-    id: crypto.randomUUID(),
+    id: id || crypto.randomUUID(),
     type,
     el: blockEl,
     styles: {
@@ -122,6 +122,18 @@ document.querySelectorAll(".block-option").forEach(btn => {
         await saveDashboard(auth.currentUser.uid);
     }
 
+    if (type === "image") {
+        insertBlock(createImageBlock());
+        imagePopup.classList.remove("hidden");
+        await saveDashboard(auth.currentUser.uid);
+    }
+
+    if (type === "notes") {
+        insertBlock(createNotesBlock());
+        await saveDashboard(auth.currentUser.uid);
+    }
+
+
     modal.classList.add("hidden");
     activeBlock = null;
     addBtn.style.display = "none";
@@ -131,7 +143,7 @@ document.querySelectorAll(".block-option").forEach(btn => {
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // Todo list block
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-function createTodoBlock() {
+function createTodoBlock(blockId) {
   const block = document.createElement("div");
   block.className = "block todo-block";
   block.dataset.type = "todo";
@@ -147,7 +159,7 @@ function createTodoBlock() {
     </div>
   `;
 
-  const blockData = registerBlock(block, "todo");
+  const blockData = registerBlock(block, "todo", blockId);
 
   const itemsContainer = block.querySelector(".todo-items");
   const input = block.querySelector(".todo-input input");
@@ -198,7 +210,7 @@ function createTodoBlock() {
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // Pomodoro timer block
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-function createPomodoroBlock() {
+function createPomodoroBlock(blockId) {
   // Implementation for Pomodoro block can go here
   const block = document.createElement("div");
   block.className = "block pomodoro-block";
@@ -216,7 +228,7 @@ function createPomodoroBlock() {
     </div>
   `;
 
-  const blockData = registerBlock(block, "pomodoro");
+  const blockData = registerBlock(block, "pomodoro", blockId);
 
     const startBtn = block.querySelector(".start-btn");
     const pauseBtn = block.querySelector(".pause-btn");
@@ -289,14 +301,13 @@ function createPomodoroBlock() {
         }
     });
 
-  registerBlock(block, "pomodoro");
   return block;
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 // Divider block
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-function createDividerBlock() {
+function createDividerBlock(blockId) {
   const block = document.createElement("div");
   block.className = "block divider-block";
   block.dataset.type = "divider";
@@ -305,9 +316,76 @@ function createDividerBlock() {
     <hr class="divider-line"/>
   `;
 
-  registerBlock(block, "divider");
+  registerBlock(block, "divider", blockId);
   return block;
 }
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// Image Block
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+function createImageBlock(blockData) {
+  const block = document.createElement("div");
+  block.className = "block image-block";
+  block.dataset.id = blockData.id;
+  block.dataset.type = "image";
+
+  // size
+  block.style.width = (blockData.layout?.width || 300) + "px";
+  block.style.height = (blockData.layout?.height || 200) + "px";
+
+  const img = document.createElement("img");
+  img.src = blockData.content.src;
+  img.draggable = false;
+
+  block.appendChild(img);
+
+  registerBlock(block, "image");
+  makeResizable(block, blockData.id);
+
+  block.addEventListener("mouseup", async () => {
+    const newWidth = block.offsetWidth;
+    const newHeight = block.offsetHeight;
+
+    await updateDoc(doc(db, "blocks", blockId), {
+      "layout.width": newWidth,
+      "layout.height": newHeight
+    });
+  });
+
+  return block;
+}
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+// handle image pop up
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+const imagePopup = document.getElementById("image-popup");
+
+
+imagePopup.addEventListener("click", (e) => {
+  e.stopPropagation();
+});
+
+document.addEventListener("click", (e) => {
+  // Clicked on drag handle?
+  const handle = e.target.closest(".drag-handle");
+
+  if (handle) {
+    e.stopPropagation();
+
+    activeBlock = handle.closest(".block");
+
+    const rect = handle.getBoundingClientRect();
+
+    imagePopup.style.top = `${rect.top + window.scrollY}px`;
+    imagePopup.style.left = `${rect.right + 8 + window.scrollX}px`;
+
+    imagePopup.classList.remove("hidden");
+    return;
+  }
+
+  // Click outside → close popup
+  imagePopup.classList.add("hidden");
+});
 
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /*show add button if no apps*/
@@ -367,10 +445,19 @@ addBTN.addEventListener("click", (e) => {
     modal.classList.remove("hidden");
 });
 
-deleteBTN.addEventListener("click", (e) => {
+deleteBTN.addEventListener("click", async (e) => {
   e.stopPropagation();
 
   if (!activeBlock) return;
+
+  // Remove from local state
+  const blockId = activeBlock.dataset.blockId;
+  if (blockId) {
+    const index = blocks.findIndex(block => block.id === blockId);
+    if (index !== -1) {
+      blocks.splice(index, 1);
+    }
+  }
 
   activeBlock.remove();
   activeBlock = null;
@@ -383,6 +470,8 @@ deleteBTN.addEventListener("click", (e) => {
   if (remainingBlocks === 0) {
     addBtn.style.display = "block";
   }
+
+  await saveDashboard(auth.currentUser.uid);
 });
 
 colorBTN.addEventListener("click", (e) => {
@@ -1010,7 +1099,7 @@ async function loadDashboard(userId) {
     let el;
 
     if (block.type === "todo") {
-      el = createTodoBlock();
+      el = createTodoBlock(block.id);
       el.querySelector(".block-title").value = block.title;
 
       const container = el.querySelector(".todo-items");
@@ -1029,12 +1118,12 @@ async function loadDashboard(userId) {
     }
 
     if (block.type === "pomodoro") {
-      el = createPomodoroBlock();
+      el = createPomodoroBlock(block.id);
       el.querySelector(".block-title").value = block.title;
     }
 
     if (block.type === "divider") {
-      el = createDividerBlock();
+      el = createDividerBlock(block.id);
     }
 
     el.style.color = block.styles.textColor;

@@ -52,6 +52,7 @@
             <button class="block-option" data-type="pomodoro">⏱ Pomodoro</button>
             <button class="block-option" data-type="notes">✎ Notes</button>
             <button class="block-option" data-type="divider">- Divider</button>
+            <button class="block-option" data-type="image">☁ Image</button>
 
             <button id="close-modal">Cancel</button>
         </div>
@@ -94,6 +95,19 @@
         <button id="purple-b">Purple color</button>
         <button id="pink-b">Pink color</button>
         <button id="red-b">Red color</button>
+    </div>
+
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <!--Image Popup-->
+    <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+    <div id="image-popup" class="image-popup hidden">
+        <h2>Enter Image URL</h2>
+        <input type="text" id="image-url-input" placeholder="https://example.com/image.jpg" style="width: 80%; padding: 10px;"/>
+        <p>OR</p>
+        <input type="file" id="image-file-input" accept="image/*" />
+        <br /><br />
+        <button id="submit-image-url">Submit</button>
+        <button id="close-image-popup">Cancel</button>
     </div>
 
     <!----------------------------------------------------------------------------------------------------------------------------------------------------------->
