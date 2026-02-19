@@ -6,11 +6,14 @@ html, body {
 
 html {
     font-family: 'Indie Flower', cursive !important;
+  background-color: var(--bg-color);
+
 }
 
 :root {
-  --panel-bg: #f0f0f0;
+  --panel-bg: #d4d4d4;
   --global-font: 'Indie Flower', cursive;
+  --bg-color: #ffffff;
 }
 
 /* Force font on ALL elements including buttons, inputs, etc. */
@@ -28,7 +31,7 @@ nav {
     width: 100%;
     background-color: var(--panel-bg);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: sticky;
+    position: static;
     top: 0;
     z-index: 1000;
     font-size: 20px;
@@ -56,6 +59,12 @@ a {
 
 #settings {
     margin-left: auto;
+    p {
+        font-size: 50px;
+        cursor: pointer;
+        margin: 0;
+        margin-right: 20px;
+    }
 }
 
 #profile-pic {
@@ -65,23 +74,22 @@ a {
     object-fit: cover;
 }
 
-
-
 #add {
     font-size: 30px;
     border: none;
     cursor: pointer;
     background-color: transparent;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
     grid-column: 1 / -1;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 main {
     flex: 1;
-    margin: 50px;
+    margin: 0;
+    padding: 50px;
     font-size: 20px;
+    overflow-x: hidden;
     /*  /* font-family: 'Indie Flower', cursive; */
 }
 
@@ -92,8 +100,7 @@ footer {
     padding-left: 0;
     background-color: var(--panel-bg);
     width: 100%;
-     /* font-family: 'Indie Flower', cursive; */
-    margin-top: auto;
+    /* font-family: 'Indie Flower', cursive; */
 }
 
 #new-button {
@@ -161,14 +168,42 @@ footer {
    /* font-family: 'Indie Flower', cursive; */
 }
 
-/*todo l;ist*/
+/*todo list*/
 /* Block card */
 .block {
   border: 2px solid #ccc;
   border-radius: 10px;
   padding: 15px;
   margin: 15px 0;
-  background: var(--panel-bg);
+  height: auto;
+  position: relative;
+  background-color: #ffffff;
+  overflow: visible;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Resize handle styling */
+.block::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 50%, #999 50%);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.block:hover::after {
+  opacity: 0.5;
+}
+
+/* Hide resize handle for divider blocks */
+.divider-block::after {
+  display: none;
 }
 
 /* Title input */
@@ -209,7 +244,6 @@ footer {
 /* Todo item */
 .todo-item {
   display: flex;
-  align-items: center;
   gap: 10px;
   margin-top: 5px;
 }
@@ -237,6 +271,12 @@ footer {
   padding: 3px 5px;
   background: none;
   margin-left: auto;
+}
+
+.edit-btn:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.5;
 } 
 
 /*pomodoro timer*/
@@ -245,26 +285,6 @@ p {
     font-size: 22px;
 }
 
-.drag-handle {
-  position: absolute;
-  left: -18px;
-  top: 10px;
-  font-size: 20px;
-  cursor: grab;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  user-select: none;
-}
-
-/* Show handle on hover */
-.block:hover .drag-handle, .divider-line:hover .drag-handle {
-  opacity: 1;
-}
-
-/* Make block relative so handle positions correctly */
-.block {
-  position: relative;
-}
 
 .block-popup {
   position: absolute;
@@ -312,13 +332,38 @@ p {
   }
 }
 
+/* Color popup columns */
+.color-popup-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.color-column {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.color-column p {
+  font-weight: bold;
+  margin: 0 0 5px 0;
+  text-align: center;
+  font-size: 14px;
+}
+
+#color-popup {
+  min-width: 400px;
+}
+
 .divider-block {
   position: relative;
-  padding: 5px 0; /* makes hover area taller */
+  padding: 0;
   border: none;
   background: none;
-  margin: 0;
+  margin: 10px 0;
   grid-column: 1 / -1;
+  height: auto;
 }
 
 .divider-block .drag-handle {
@@ -333,7 +378,7 @@ p {
 }
 
 .divider-block:hover .drag-handle {
-  display: block;
+  opacity: 1;
 }
 
 /* Hide modal */
@@ -482,27 +527,134 @@ p {
 }
 
 #apps-section {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
+    grid-auto-rows: auto;
+    align-items: start;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .image-block {
   position: relative;
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 0;
+  border: none;
+  padding: 0;
+  margin: 15px 0;
+  background: none;
+  resize: both;
+  display: inline-block;
+  overflow: visible;
+  min-width: 50px;
+  min-height: 50px;
 }
 
 .image-block img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* or cover */
+  display: block;
 }
 
-.image-block {
-  resize: both;
-  overflow: auto;
+.image-block .drag-handle, .pomodoro-block .drag-handle, .todo-block .drag-handle, .notes-block .drag-handle {
+  position: absolute;
+  top: 5px;
+  left: -27px;
+  color: #999;
+  padding: 5px 8px;
+  font-size: 20px;
+  cursor: grab;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  user-select: none;
+  z-index: 100;
+}
+
+.image-block:hover .drag-handle, .pomodoro-block:hover .drag-handle, .todo-block:hover .drag-handle, .notes-block:hover .drag-handle {
+  opacity: 1;
+  color: #333;
+}
+
+/* Show handle on hover */
+.divider-line:hover .drag-handle {
+  opacity: 1;
+  color: #333;
+}
+
+
+/* Image Popup */
+.image-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  z-index: 2000;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+}
+
+.image-popup h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.image-popup input[type="text"],
+.image-popup input[type="file"] {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.image-popup input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.image-popup p {
+  margin: 15px 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #666;
+}
+
+.image-popup button {
+  padding: 10px 20px;
+  margin: 10px 5px;
+  background: #7aa6dd;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.image-popup button:hover {
+  background: #5a8bbf;
+}
+
+.image-popup #close-image-popup {
+  background: #999;
+}
+
+.image-popup #close-image-popup:hover {
+  background: #777;
+}
+
+.notes-textarea {
+  width: 100%;
+  resize: none;   /* prevents double resizing handles */
+  box-sizing: border-box;
+  height: 80%;
+}
+
+.notes-content {
+  height: 80%;
+  width: 100%;
 }

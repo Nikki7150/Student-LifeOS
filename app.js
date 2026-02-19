@@ -114,6 +114,11 @@ document.addEventListener("DOMContentLoaded", () => {
     loginBtn.addEventListener("click", () => {
       const provider = new GoogleAuthProvider();
       
+      // Force account selection prompt
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+      
       signInWithPopup(auth, provider)
         .then((result) => {
           const user = result.user;
