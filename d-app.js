@@ -885,6 +885,10 @@ document.getElementById("default").addEventListener("click", async () => {
     "--panel-bg",
     "#d4d4d4" // pick any color
   );
+  document.documentElement.style.setProperty(
+    "--button-color",
+    "#7aa6dd"
+  );
   if (newBtn) newBtn.style.backgroundColor = "#f0f0f0";
   // also change html background to match the new theme
   document.documentElement.style.setProperty(
@@ -898,6 +902,10 @@ document.getElementById("blue").addEventListener("click", async () => {
   document.documentElement.style.setProperty(
     "--panel-bg",
     "#638dd5" // pick any color
+  );
+  document.documentElement.style.setProperty(
+    "--button-color",
+    "#549ddd"
   );
   if (newBtn) newBtn.style.backgroundColor = "#638dd5";
   // also change html background to match the new theme
@@ -913,6 +921,10 @@ document.getElementById("green").addEventListener("click", async () => {
     "--panel-bg",
     "#416e57" // pick any color
   );
+  document.documentElement.style.setProperty(
+    "--button-color",
+    "#6cb485"
+  );
   if (newBtn) newBtn.style.backgroundColor = "#416e57";
   // also change html background to match the new theme
   document.documentElement.style.setProperty(
@@ -926,6 +938,10 @@ document.getElementById("red").addEventListener("click", async () => {
   document.documentElement.style.setProperty(
     "--panel-bg",
     "#970404" // pick any color
+  );
+  document.documentElement.style.setProperty(
+    "--button-color",
+    "#e73838"
   );
   if (newBtn) newBtn.style.backgroundColor = "#970404";
   // also change html background to match the new theme
@@ -941,6 +957,10 @@ document.getElementById("purple").addEventListener("click", async () => {
     "--panel-bg",
     "#7546a2" // pick any color
   );
+  document.documentElement.style.setProperty(
+    "--button-color",
+    "#8353c8"
+  );
   if (newBtn) newBtn.style.backgroundColor = "#7546a2";
   // also change html background to match the new theme
   document.documentElement.style.setProperty(
@@ -954,6 +974,10 @@ document.getElementById("orange").addEventListener("click", async () => {
   document.documentElement.style.setProperty(
     "--panel-bg",
     "#ea8118" // pick any color
+  );
+  document.documentElement.style.setProperty(
+    "--button-color",
+    "#f8a74b"
   );
   if (newBtn) newBtn.style.backgroundColor = "#ea8118";
   // also change html background to match the new theme
@@ -969,7 +993,10 @@ document.getElementById("pink").addEventListener("click", async () => {
     "--panel-bg",
     "#f155a0" // pick any color
   );
-  
+  document.documentElement.style.setProperty(
+    "--button-color",
+    "#f289c6"
+  );
   if (newBtn) newBtn.style.backgroundColor = "#f155a0";
   // also change html background to match the new theme
   document.documentElement.style.setProperty(
@@ -984,7 +1011,10 @@ document.getElementById("gray").addEventListener("click", async () => {
     "--panel-bg",
     "#6d6d6d" // pick any color
   );
-  
+  document.documentElement.style.setProperty(
+    "--button-color",
+    "#838383"
+  );
   if (newBtn) newBtn.style.backgroundColor = "#6d6d6d";
   // also change html background to match the new theme
   document.documentElement.style.setProperty(
@@ -999,7 +1029,10 @@ document.getElementById("brown").addEventListener("click", async () => {
     "--panel-bg",
     "#935c50" // pick any color
   );
-  
+  document.documentElement.style.setProperty(
+    "--button-color",
+    "#7a5a5a"
+  );
   if (newBtn) newBtn.style.backgroundColor = "#935c50";
   // also change html background to match the new theme
   document.documentElement.style.setProperty(
@@ -1009,11 +1042,14 @@ document.getElementById("brown").addEventListener("click", async () => {
   await saveDashboard(auth.currentUser.uid);
 });
 
-
 document.getElementById("yellow").addEventListener("click", async () => {
   document.documentElement.style.setProperty(
     "--panel-bg",
     "#ebcb48" // pick any color
+  );
+  document.documentElement.style.setProperty(
+    "--button-color",
+    "#fcd677"
   );
   if (newBtn) newBtn.style.backgroundColor = "#ebcb48";
   // also change html background to match the new theme

@@ -92,7 +92,7 @@ html {
     display: block;
     max-width: min(800px, 88%);
     width: 100%;
-    text-align: left;
+    text-align: center;
     white-space: pre-wrap;
     font-family: 'Share Tech Mono', monospace;
     color: #0d1929;
