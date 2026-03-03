@@ -1,5 +1,11 @@
 html {
     font-family: 'Indie Flower', cursive;
+    background-image: url('/background.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    margin: 0;
+    padding: 0;
 }
 
 /*Bootscreen overlay*/
@@ -98,4 +104,31 @@ html {
     color: #0d1929;
     font-size: 50px;
     line-height: 1.45;
+}
+
+h1 {
+    position: absolute; 
+    top: 40%; 
+    left: 40%;
+    font-size: 75px;
+}
+
+h2 {
+    position: absolute; 
+    top: 53%; 
+    left: 40%;
+    font-size: 45px;
+}
+
+#login-button {
+    position: absolute; 
+    top: 68%; 
+    left: 50%;
+    font-size: 35px;
+    font-family: 'Indie Flower', cursive;
+    border: none;
+    text-decoration: wavy underline;
+    background: none;
+    cursor: pointer;
+    padding: none;
 }
